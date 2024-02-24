@@ -46,3 +46,6 @@ update product quantity: PUT=http://localhost:8000/products/id
 This project is **free to use** and does not contains any license.
 
 ## sreen shot
+![Screenshot 2024-02-24 at 1 42 50 PM](https://github.com/Sukesh-Hegde/Ecommerce-API/assets/128299015/7bb51c69-6fda-49dd-a7c5-21704f719db6)
+
+
