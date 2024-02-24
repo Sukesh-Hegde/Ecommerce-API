@@ -1,44 +1,48 @@
-# Anon - An eCommerce Website
+#  An eCommerce api
 
-![GitHub repo size](https://img.shields.io/github/repo-size/codewithsadee/anon-ecommerce-website)
-![GitHub stars](https://img.shields.io/github/stars/codewithsadee/anon-ecommerce-website?style=social)
-![GitHub forks](https://img.shields.io/github/forks/codewithsadee/anon-ecommerce-website?style=social)
-[![Twitter Follow](https://img.shields.io/twitter/follow/codewithsadee?style=social)](https://twitter.com/intent/follow?screen_name=codewithsadee)
-[![YouTube Video Views](https://img.shields.io/youtube/views/3l8Lob4ysI0?style=social)](https://youtu.be/3l8Lob4ysI0)
+An API for an ecommerce platform admin to manage product inventory
 
-Anon is a fully responsive ecommerce website, maximum compatiblities in all mobile devices, built using HTML, CSS, and JavaScript.
+## Teck used
+Tech Stack: Node.js & Mongo DB
 
-## Demo
+## how to setup the project on local system
 
-![Anon Desktop Demo](./website-demo-image/desktop.png "Desktop Demo")
-![Anon Mobile Demo](./website-demo-image/mobile.png "Mobile Demo")
+install packages: npm i
 
-## Prerequisites
+run program: nodemon index.js
+By default it will be connected to port 8000
 
-Before you begin, ensure you have met the following requirements:
+## Test  API’s using Postman:
+signUp: POST=http://localhost:8000/user/signup
+        {
+    "name":"",
+    "email":"",
+    "password":""
+}
 
-* [Git](https://git-scm.com/downloads "Download Git") must be installed on your operating system.
+signIn: POST=http://localhost:8000/user/signin
+    {
+    "email":"",
+    "password":""
+}
 
-## Installing Anon
+addProduct: POST=http://localhost:8000/products/create
+    {
+    "name":"iphone",
+    "quantity":5
+}
 
-To install **Anon**, follow these steps:
+get all product: GET=http://localhost:8000/products
 
-Linux and macOS:
+delete product: DELETE=http://localhost:8000/products/id 
 
-```bash
-sudo git clone https://github.com/codewithsadee/anon-ecommerce-website.git
-```
-
-Windows:
-
-```bash
-git clone https://github.com/codewithsadee/anon-ecommerce-website.git
-```
-
-## Contact
-
-If you want to contact me you can reach me at [Twitter](https://www.twitter.com/codewithsadee).
+update product quantity: PUT=http://localhost:8000/products/id
+    {
+    "quantity":10
+}
 
 ## License
 
 This project is **free to use** and does not contains any license.
+
+## sreen shot

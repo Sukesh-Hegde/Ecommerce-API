@@ -5,7 +5,6 @@ import express from "express";
 
 import userController from "./user.controller.js";
 
-
 // 2. Initialize Express router.
 const userRouter = express.Router();
 

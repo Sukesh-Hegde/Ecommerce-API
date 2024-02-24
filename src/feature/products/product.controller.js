@@ -1,5 +1,4 @@
 import ProductRepository from "./product.repository.js";
-import productModel from "./product.schema.js";
 
 export default class ProductController {
   constructor() {
@@ -8,13 +7,13 @@ export default class ProductController {
 
   async addproduct(req, res) {
     try {
-      const { name, quantity} = req.body;
-      const addedBy=req.userID;
+      const { name, quantity } = req.body;
+      const addedBy = req.userID;
       const newProduct = {
         name,
         quantity,
-        addedBy
-    }
+        addedBy,
+      };
       const createdProduct = await this.productRepository.add(newProduct);
       res.status(201).send(createdProduct);
     } catch (err) {
@@ -50,20 +49,20 @@ export default class ProductController {
     }
   }
 
-  async updateProduct(req,res){
+  async updateProduct(req, res) {
     const id = req.params.id;
     const userID = req.userID; //requesting directly from token
     try {
-
-        const product = await this.productRepository.get(id);
-        if (product.addedBy == userID) {
-            // const updated = await product.updateOne({ $set: req.body});
-            console.log(product);
-            res.status(200).send({ data:product, message: "updated successfully" });
+      const product = await this.productRepository.get(id);
+      if (product.addedBy == userID) {
+        await product.updateOne({ $set: req.body });
+        const updatedProduct = await this.productRepository.get(id);
+        res.send({ data: updatedProduct, message: "updated successfully" });
+        // res.status(200).json("product Updated");
       } else {
         res.status(403).json("Action forbidden");
       }
-    }  catch (err) {
+    } catch (err) {
       console.log(err);
       return res.status(200).send("Something went wrong while deleting post");
     }

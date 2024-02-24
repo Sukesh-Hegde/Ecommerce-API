@@ -25,13 +25,12 @@ export default class ProductRepository {
 
   async get(id) {
     try {
-      return await productModel.findByIdAndUpdate(id);
+      return await productModel.findById(id);
     } catch (err) {
       console.log(err);
       throw new ApplicationError("Something went wrong with database", 500);
     }
   }
-
   async delete(post) {
     try {
       return await post.deleteOne();
