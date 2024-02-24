@@ -15,19 +15,15 @@ server.use(
       resave: false,
       saveUninitialized: true,
     })
-  );
+);
+
+server.get("/", (req, res) => {
+  res.send("Welcome to Ecommerce APIs");
+});
 
 
 server.use("/user/",userRouter);
 server.use("/products/",jwtAuth,productRouter);
-
-
-
-
-
-
-
-
 
 
 server.listen(8000,()=>{
