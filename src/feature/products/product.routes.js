@@ -15,8 +15,21 @@ const productController = new ProductController();
 // localhost/products
 
 // localhost:4100/api/products/filter?minPrice=10&maxPrice=20&category=Category1
+productRouter.put("/:id", (req, res,next) => {
+  productController.updateProduct(req, res,next);
+});
+
+productRouter.delete("/:id", (req, res) => {
+  productController.deleteProduct(req, res);
+});
+
+
 productRouter.post("/create", (req, res, next) => {
   productController.addproduct(req, res, next);
+});
+
+productRouter.get("/", (req, res) => {
+  productController.getAllProducts(req, res);
 });
 
 

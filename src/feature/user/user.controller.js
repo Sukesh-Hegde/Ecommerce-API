@@ -1,5 +1,7 @@
 
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { ApplicationError } from "../../error-handler/applicationError.js";
 import userRepository from "./user.repository.js";
 
 export default class userController {
@@ -48,8 +50,6 @@ export default class userController {
               expiresIn: "1h",
             }
           );
-          const userID = user._id; //requesting directly from token
-          await this.UserRepository.loginRecord(token, userID);
 
           res
             .cookie("token", token, {
