@@ -11,16 +11,9 @@ export default class userRepository {
       return newUser;
     } catch (err) {
       console.log(err);
-      if (err instanceof mongoose.Error.ValidationError) {
-        //if its a mongoose error then it will be thrown to the error handler midlewere which is there in (server.js file)
-        throw err;
-      } else {
-        console.log(err);
-        throw new ApplicationError("Something went wrong with database", 500);
-      }
+      throw new ApplicationError("Something went wrong with database", 500);
     }
   }
-
 
   async findByEmail(email) {
     try {

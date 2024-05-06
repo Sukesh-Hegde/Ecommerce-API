@@ -1,29 +1,35 @@
-
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { ApplicationError } from "../../error-handler/applicationError.js";
 import userRepository from "./user.repository.js";
 
 export default class userController {
-    constructor() {
-        this.UserRepository = new userRepository();
-      }
-      // Registering a new User
+  constructor() {
+    this.UserRepository = new userRepository();
+  }
+  // Registering a new User
   registerUser = async (req, res, next) => {
     const { name, email, password } = req.body;
     const hashPassword = await bcrypt.hash(password, 12);
     try {
+      const existingUser = await this.UserRepository.findByEmail(email);
+
+      if (existingUser) {
+        // If a user with the provided email already exists, return an error response
+        return res.status(400).json({ error: "Email already registered." });
+      }
+      
       const newUser = {
         name,
         email,
         password: hashPassword,
       };
 
-      await this.UserRepository.signUp(newUser);
-      res.status(200).json(newUser);
-    } catch (error) {
-      console.log(error);
-      throw new ApplicationError("Something went wrong ", 500);
+      const user = await this.UserRepository.signUp(newUser);
+      res.status(200).json({ user });
+    } catch (err) {
+      console.log(err);
+      throw new ApplicationError("Something went wrong with database", 500);
     }
   };
 
@@ -45,7 +51,7 @@ export default class userController {
               userID: user._id,
               email: user.email,
             },
-            "AIb6d35fvJM4O9pXqXQNla2jBCH9kuLz", 
+            "AIb6d35fvJM4O9pXqXQNla2jBCH9kuLz",
             {
               expiresIn: "1h",
             }
@@ -68,5 +74,4 @@ export default class userController {
       return res.status(200).send("Something went wrong");
     }
   }
-
 }

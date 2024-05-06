@@ -19,3 +19,4 @@ const userModel = mongoose.model(
   );
   
 export default userModel;
+
