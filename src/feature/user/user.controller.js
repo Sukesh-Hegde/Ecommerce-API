@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { ApplicationError } from "../../error-handler/applicationError.js";
 import userRepository from "./user.repository.js";
+import { sendWelcomeEmail } from "../../emails/welcomeMail.js";
 
 export default class userController {
   constructor() {
@@ -18,7 +19,7 @@ export default class userController {
         // If a user with the provided email already exists, return an error response
         return res.status(400).json({ error: "Email already registered." });
       }
-      
+
       const newUser = {
         name,
         email,
@@ -26,6 +27,7 @@ export default class userController {
       };
 
       const user = await this.UserRepository.signUp(newUser);
+      await sendWelcomeEmail(newUser);
       res.status(200).json({ user });
     } catch (err) {
       console.log(err);
