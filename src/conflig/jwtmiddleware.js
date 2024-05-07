@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 const jwtAuth = (req, res, next) => {
   // 1. Read the token.
-  const token = req.headers["authorization"];
-
+  // const token = req.headers["authorization"];
+  const { token } = req.cookies;
   // 2. if no token, return the error.
   if (!token) {
     return res.status(401).send("Unauthorized");

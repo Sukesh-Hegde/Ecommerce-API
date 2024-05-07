@@ -22,6 +22,8 @@ export const userSchema = new mongoose.Schema({
     default: "user",
     enum: ["user", "admin"],
   },
+  resetPasswordToken: String,
+  resetPasswordExpire: Date,
 });
 
 userSchema.methods.getResetPasswordToken = async function () {

@@ -1,51 +1,127 @@
-#  An eCommerce api
+# An eCommerce api
 
-An API for an ecommerce platform admin to manage product inventory
+An API for an ecommerce platform where an customer can login and view, get ,rate,and update the products
 
 ## Teck used
+
 Tech Stack: Node.js & Mongo DB
 
 ## how to setup the project on local system
 
 install packages: npm i
 
-run program: nodemon index.js
-By default it will be connected to port 8000
+run program: npm start
+By default it will be connected to port 3000
 
-## Test  API’s using Postman:
-signUp: POST=http://localhost:8000/user/signup
-        {
+## Functionality
+
+### Users's functions
+
+## Test API’s using Postman:
+
+signUp: POST=http://localhost:3000/api/storefleet/user/signup
+{
+"name":"",
+"email":"",
+"password":""
+}
+
+logIn: POST=http://localhost:3000/api/storefleet/user/login
+{
+"email":"",
+"password":""
+}
+
+logOut: GET=http://localhost:3000/api/storefleet/user/logout
+
+Forget password: POST=http://localhost:3000/api/storefleet/user/password/forget
+{
+"email":""
+}
+
+Reset password: PUT=http://localhost:3000/api/storefleet/user/password/reset/(code from the mail)
+{
+"newPassword":"",
+"confirmPassword":""
+}
+
+Update password: PUT= http://localhost:3000/api/storefleet/user/password/update
+{
+"currentPassword":"",
+"newPassword":"",
+"confirmPassword":""
+}
+
+Update Profile: PUT= http://localhost:3000/api/storefleet/user/profile/update
+{
+"name":"",
+"email":""
+}
+
+Update User Role: PUT= http://localhost:3000/api/storefleet/user/admin/update
+{
+"userId":"",
+"newRole":"admin",
+"newData":""
+}
+
+Get User Details: GET=http://localhost:3000/api/storefleet/user/details
+
+### product's functions
+(Admin)
+Add Product: POST= http://localhost:3000/api/storefleet/product/add
+{
+"name":"",
+"description":"",
+"price":,
+"category":""
+}
+
+(Admin)
+Get All Product: GET= http://localhost:3000/api/storefleet/product/products
+
+Update product By Id: PUT= http://localhost:3000/api/storefleet/product/update/65d5b463980eee55d9509b98
+{
     "name":"",
-    "email":"",
-    "password":""
+    "description":"",
+    "price":,
+    "category":""
 }
 
-signIn: POST=http://localhost:8000/user/signin
-    {
-    "email":"",
-    "password":""
+Get product By Id: GET= http://localhost:3000/api/storefleet/product/details/65d5b463980eee55d9509b98
+
+Rate product By Id: PUT= http://localhost:3000/api/storefleet/product/rate/65d5b463980eee55d9509b98
+{
+    "rating":5,
+    "comment":"woowww!!"
 }
 
-addProduct: POST=http://localhost:8000/products/create
-    {
-    "name":"iphone",
-    "quantity":5
-}
+Get All Reviews: GET= http://localhost:3000/api/storefleet/product/reviews/65d5b463980eee55d9509b98
 
-get all product: GET=http://localhost:8000/products
+Delete Review and Update: DeLete = http://localhost:3000/api/storefleet/product/review/delete?productId=65d5b463980eee55d9509b98&reviewId=65d5e14a3ac7d27fa4cb6456
 
-delete product: DELETE=http://localhost:8000/products/id 
+#### Tools Used
 
-update product quantity: PUT=http://localhost:8000/products/id
-    {
-    "quantity":10
-}
+NodeJS
+MongoDB
+ExpressJS
+
+##### Libraries
+bcryptjs
+express
+cookie-parser
+body-parser
+dotenv
+jsonwebtoken
+express-session
+mongoose
+nodemailer
+validator
 
 ## License
 
 This project is **free to use** and does not contains any license.
 
-## sreen shot
-![Screenshot 2024-02-24 at 1 42 50 PM](https://github.com/Sukesh-Hegde/Ecommerce-API/assets/128299015/7bb51c69-6fda-49dd-a7c5-21704f719db6)
+
 
 

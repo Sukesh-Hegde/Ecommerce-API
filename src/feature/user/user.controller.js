@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import { ApplicationError } from "../../error-handler/applicationError.js";
 import userRepository from "./user.repository.js";
@@ -41,7 +42,7 @@ export default class userController {
       //1.find user by email
       //check user is there by checking the email
       const user = await this.UserRepository.findByEmail(req.body.email);
-        if (!user) {
+      if (!user) {
         return res.status(400).send("Incorrect email");
       } else {
         //2.compare password with hashed password
@@ -59,8 +60,16 @@ export default class userController {
               expiresIn: "1d",
             }
           );
+          const cookieOptions = {
+            expires: new Date(
+              Date.now() + process.env.COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+            ),
+            httpOnly: true,
+          };
 
-          res.json({ success: true, msg: "user login successful", token });
+          res
+            .cookie("token", token, cookieOptions)
+            .json({ success: true, msg: "user login successful", token });
 
           // 4. Send token.
         } else {
@@ -89,11 +98,68 @@ export default class userController {
 
       await sendPasswordResetEmail(user, resetUrl);
 
-
       res.status(200).json({ user });
     } catch (err) {
       console.log(err);
-      throw new ApplicationError("Something went wrong with forgot password", 500);
+      throw new ApplicationError(
+        "Something went wrong with forgot password",
+        500
+      );
     }
   };
+
+  resetUserPassword = async (req, res, next) => {
+    const resetToken = req.params.token;
+    const { newPassword, confirmPassword } = req.body;
+
+    try {
+      //hashing the reset password so that it will match with data present in the database
+      const hashed = crypto
+        .createHash("sha256")
+        .update(resetToken)
+        .digest("hex");
+      // Find the user by the reset token
+      console.log(hashed);
+      const user = await this.UserRepository.findUserForPasswordResetRepo(
+        hashed
+      );
+
+      // Check if the user exists and the token is valid
+      if (!user) {
+        throw new ApplicationError(
+          "Something went wrong with reset password (user is not found)",
+          500
+        );
+      }
+
+      // Update the user's password
+      user.password = await bcrypt.hash(newPassword, 12);
+      
+      await user.save();
+
+      // Send a success response
+      res
+        .status(200)
+        .cookie("token", null, {
+          expires: new Date(Date.now()),
+          httpOnly: true,
+        })
+        .json({ success: true, message: "Password reset successfully" });
+    } catch (error) {
+      return next(
+        new ErrorHandler(500, error.message || "Internal Server Error")
+      );
+    }
+  };
+
+logoutUser = async (req, res, next) => {
+  res
+    .status(200)
+    //removing token from the cookies
+    .cookie("token", null, {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+    })
+    .json({ success: true, msg: "logout successful" });
+};
 }

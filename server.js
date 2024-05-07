@@ -3,9 +3,11 @@ import { connectUsingMongoose } from "./src/conflig/mongoose.js";
 import productRouter from "./src/feature/products/product.routes.js";
 import userRouter from "./src/feature/user/user.routes.js";
 import jwtAuth from "./src/middleware.js/jwt.middleware.js"
- 
+ import cookieParser from "cookie-parser";
+
 const server=express();
 server.use(express.json());
+server.use(cookieParser());
 
 server.get("/", (req, res) => {
   res.send("Welcome to Ecommerce APIs");

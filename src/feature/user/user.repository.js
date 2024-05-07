@@ -22,4 +22,11 @@ export default class userRepository {
       throw new ApplicationError("Something went wrong with database", 500);
     }
   }
+
+  async findUserForPasswordResetRepo (hashtoken) {
+    return await userModel.findOne({
+      resetPasswordToken: hashtoken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+  };
 }

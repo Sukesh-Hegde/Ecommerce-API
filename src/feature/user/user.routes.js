@@ -25,12 +25,13 @@ userRouter.post("/password/forget",jwtAuth, (req, res) => {
   UserController.forgetPassword(req, res);
 });
 
-userRouter.post("/password/reset/:token", jwtAuth, (req, res) => {
-  UserController.forgetPassword(req, res);
+userRouter.put("/password/reset/:token", jwtAuth, (req, res) => {
+  UserController.resetUserPassword(req, res);
 });
 
-userRouter.get("/protected", jwtAuth, (req, res) => {
-  return res.status(200).send("entered protected page");
+
+userRouter.get("/logout", jwtAuth, (req, res) => {
+  UserController.logoutUser(req, res);
 });
 
 export default userRouter;
