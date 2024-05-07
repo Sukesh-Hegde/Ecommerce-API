@@ -58,8 +58,8 @@ userRouter.delete("/admin/delete/:id", jwtAuth, authByUserRole, (req, res) => {
   UserController.deleteUser(req, res);
 });
 
-// Admin PUT Routes(update user profile)
-userRouter.delete("/admin/update", jwtAuth, authByUserRole, (req, res) => {
+// Admin PUT Routes(update user profile role)
+userRouter.put("/admin/update", jwtAuth, authByUserRole, (req, res) => {
   UserController.updateUserProfileAndRole(req, res);
 });
 

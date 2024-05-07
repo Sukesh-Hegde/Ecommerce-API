@@ -1,5 +1,6 @@
 import userModel from "./user.schema.js";
 import { ApplicationError } from "../../error-handler/applicationError.js";
+import { mongoose } from "mongoose";
 
 export default class userRepository {
   async signUp(user) {
@@ -49,4 +50,37 @@ export default class userRepository {
   async deleteUserRepo(_id) {
     return await userModel.findByIdAndDelete(_id);
   }
+
+async updateUserRoleAndProfileRepo  (_id, data) {
+  try {
+    // Ensure that the provided _id is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(_id)) {
+      return res
+        .status(400)
+        .send("id is not valid");
+    }
+
+    // Find the user by _id and update the role and profile
+    const updatedUser = await userModel.findByIdAndUpdate(
+      _id,
+      { $set: data },
+      { new: true, runValidators: true, useFindAndModify: false }
+    );
+
+    if (!updatedUser) {
+      throw new ApplicationError(
+        "Something went wrong while updateUserRoleAndProfileRepo",
+        500
+      );
+    }
+
+    return updatedUser;
+  } catch (error) {
+    console.log(error);
+    throw new ApplicationError(
+      "Something went wrong while updateUserRoleAndProfileRepo",
+      500
+    );
+  }
+};
 }

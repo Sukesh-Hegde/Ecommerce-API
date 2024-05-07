@@ -227,24 +227,29 @@ deleteUser = async (req, res, next) => {
   }
 };
 
-export const updateUserProfileAndRole = async (req, res, next) => {
-  const { userId, newRole, newData } = req.body;
+updateUserProfileAndRole = async (req, res, next) => {
+  const { userId, newRole } = req.body;
 
   try {
     // Ensure that the admin has provided the necessary parameters
-    if (!req.user._id || !newRole || !newData) {
-      return next(new ErrorHandler(400, "Please provide userId, newRole, and newData"));
+    if (!userId || !newRole) {
+      return res
+        .status(400)
+        .send("Please provide userId, newRole");
     }
 
     // Update the user's role and profile
-    const updatedUser = await updateUserRoleAndProfileRepo(userId, {
-      role: newRole,
-      ...newData,
-    });
+    const updatedUser = await this.UserRepository.updateUserRoleAndProfileRepo(
+      userId,
+      {
+        role: newRole,
+      }
+    );
 
     res.status(200).json({ success: true, updatedUser });
   } catch (error) {
-    return next(new ErrorHandler(400, error));
+    console.log(error);
+    throw new ApplicationError("Something went wrong while deleteUser", 500);
   }
 };
 }
