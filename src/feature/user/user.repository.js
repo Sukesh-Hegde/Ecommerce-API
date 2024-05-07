@@ -45,4 +45,8 @@ export default class userRepository {
   async getAllUsersRepo() {
     return userModel.find({});
   }
+
+  async deleteUserRepo(_id) {
+    return await userModel.findByIdAndDelete(_id);
+  }
 }

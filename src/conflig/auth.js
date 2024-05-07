@@ -5,11 +5,10 @@ export const authByUserRole = async (req, res, next) => {
 
   try {
     const user = await userModel.findById(userID);
-    console.log(user.role);
     if (user.role == "admin") {
       next();
     } else {
-      return res.status(401).send("Unauthorized");
+      return res.status(403).send("Unauthorized");
     }
   } catch (error) {
     console.log(error);

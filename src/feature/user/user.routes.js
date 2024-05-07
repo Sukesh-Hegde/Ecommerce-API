@@ -43,7 +43,7 @@ userRouter.get("/details", jwtAuth, (req, res) => {
   UserController.getUserDetails(req, res);
 });
 
-//Only Admin
+//Only Admin get all user detail
 userRouter.get(
   "/admin/allusers",
   jwtAuth,
@@ -52,6 +52,17 @@ userRouter.get(
     UserController.getAllUsers(req, res);
   }
 );
+
+// Admin DELETE Routes
+userRouter.delete("/admin/delete/:id", jwtAuth, authByUserRole, (req, res) => {
+  UserController.deleteUser(req, res);
+});
+
+// Admin PUT Routes(update user profile)
+userRouter.delete("/admin/update", jwtAuth, authByUserRole, (req, res) => {
+  UserController.updateUserProfileAndRole(req, res);
+});
+
 
 
 export default userRouter;

@@ -208,4 +208,43 @@ getAllUsers = async (req, res, next) => {
     throw new ApplicationError("Something went wrong while getAllUsers", 500);
   }
 };
+
+deleteUser = async (req, res, next) => {
+  try {
+    const deletedUser = await this.UserRepository.deleteUserRepo(req.params.id);
+    if (!deletedUser) {
+      return res
+        .status(400)
+        .json({ success: false, msg: "no user found with provided id" });
+    }
+
+    res
+      .status(200)
+      .json({ success: true, msg: "user deleted successfully", deletedUser });
+  } catch (error) {
+    console.log(error);
+    throw new ApplicationError("Something went wrong while deleteUser", 500);
+  }
+};
+
+export const updateUserProfileAndRole = async (req, res, next) => {
+  const { userId, newRole, newData } = req.body;
+
+  try {
+    // Ensure that the admin has provided the necessary parameters
+    if (!req.user._id || !newRole || !newData) {
+      return next(new ErrorHandler(400, "Please provide userId, newRole, and newData"));
+    }
+
+    // Update the user's role and profile
+    const updatedUser = await updateUserRoleAndProfileRepo(userId, {
+      role: newRole,
+      ...newData,
+    });
+
+    res.status(200).json({ success: true, updatedUser });
+  } catch (error) {
+    return next(new ErrorHandler(400, error));
+  }
+};
 }
