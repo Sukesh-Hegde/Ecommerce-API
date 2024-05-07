@@ -2,7 +2,6 @@ import express from "express";
 import { connectUsingMongoose } from "./src/conflig/mongoose.js";
 import productRouter from "./src/feature/products/product.routes.js";
 import userRouter from "./src/feature/user/user.routes.js";
-import jwtAuth from "./src/middleware.js/jwt.middleware.js"
  import cookieParser from "cookie-parser";
 
 const server=express();
@@ -15,7 +14,7 @@ server.get("/", (req, res) => {
 
 
 server.use("/user/",userRouter);
-server.use("/products/",jwtAuth,productRouter);
+server.use("/products/",productRouter);
 
 
 server.listen(8000,()=>{

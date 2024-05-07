@@ -8,7 +8,7 @@ export const authByUserRole = async (req, res, next) => {
     if (user.role == "admin") {
       next();
     } else {
-      return res.status(403).send("Unauthorized");
+      return res.status(403).send("Only Admin can access");
     }
   } catch (error) {
     console.log(error);

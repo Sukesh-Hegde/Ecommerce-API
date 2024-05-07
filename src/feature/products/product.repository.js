@@ -2,12 +2,13 @@ import productModel from "./product.schema.js";
 import { ApplicationError } from "../../error-handler/applicationError.js";
 
 export default class ProductRepository {
-  async add(productData) {
+  async addNewProductRepo(product) {
+    return await new productModel(product).save();
+  }
 
+  async get(id) {
     try {
-      // 1. Adding Product
-      const newProduct = new productModel(productData);
-      return await newProduct.save();
+      return await productModel.findById(id);
     } catch (err) {
       console.log(err);
       throw new ApplicationError("Something went wrong with database", 500);
@@ -23,14 +24,6 @@ export default class ProductRepository {
     }
   }
 
-  async get(id) {
-    try {
-      return await productModel.findById(id);
-    } catch (err) {
-      console.log(err);
-      throw new ApplicationError("Something went wrong with database", 500);
-    }
-  }
   async delete(post) {
     try {
       return await post.deleteOne();
