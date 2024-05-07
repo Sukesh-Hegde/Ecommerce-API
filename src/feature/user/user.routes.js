@@ -34,4 +34,8 @@ userRouter.get("/logout", jwtAuth, (req, res) => {
   UserController.logoutUser(req, res);
 });
 
+userRouter.put("/profile/update", jwtAuth, (req, res) => {
+  UserController.updateUserProfile(req, res);
+});
+
 export default userRouter;

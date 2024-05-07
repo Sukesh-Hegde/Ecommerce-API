@@ -23,10 +23,18 @@ export default class userRepository {
     }
   }
 
-  async findUserForPasswordResetRepo (hashtoken) {
+  async findUserForPasswordResetRepo(hashtoken) {
     return await userModel.findOne({
       resetPasswordToken: hashtoken,
       resetPasswordExpire: { $gt: Date.now() },
     });
-  };
+  }
+
+  async updateUserProfileRepo(_id, data) {
+    return await userModel.findOneAndUpdate(_id, data, {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    });
+  }
 }

@@ -134,7 +134,7 @@ export default class userController {
 
       // Update the user's password
       user.password = await bcrypt.hash(newPassword, 12);
-      
+
       await user.save();
 
       // Send a success response
@@ -146,20 +146,40 @@ export default class userController {
         })
         .json({ success: true, message: "Password reset successfully" });
     } catch (error) {
-      return next(
-        new ErrorHandler(500, error.message || "Internal Server Error")
+      throw new ApplicationError(
+        "Something went wrong with reset password",
+        500
       );
     }
   };
 
-logoutUser = async (req, res, next) => {
-  res
-    .status(200)
-    //removing token from the cookies
-    .cookie("token", null, {
-      expires: new Date(Date.now()),
-      httpOnly: true,
-    })
-    .json({ success: true, msg: "logout successful" });
-};
+  logoutUser = async (req, res, next) => {
+    res
+      .status(200)
+      //removing token from the cookies
+      .cookie("token", null, {
+        expires: new Date(Date.now()),
+        httpOnly: true,
+      })
+      .json({ success: true, msg: "logout successful" });
+  };
+
+  updateUserProfile = async (req, res, next) => {
+    const { name, email } = req.body;
+    const userID = req.userID;
+    try {
+      const updatedUserDetails =
+        await this.UserRepository.updateUserProfileRepo({_id:userID}, {
+          name,
+          email,
+        });
+      res.status(201).json({ success: true, updatedUserDetails });
+    } catch (error) {
+      console.log(error);
+      throw new ApplicationError(
+        "Something went wrong while updateUserProfile",
+        500
+      );
+    }
+  };
 }
