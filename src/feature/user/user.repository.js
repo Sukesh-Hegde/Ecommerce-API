@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import userModel from "./user.schema.js";
 import { ApplicationError } from "../../error-handler/applicationError.js";
 
