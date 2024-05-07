@@ -12,7 +12,7 @@ export default class userController {
   }
   // Registering a new User
   registerUser = async (req, res, next) => {
-    const { name, email, password } = req.body;
+    const { name, email, password,role } = req.body;
     const hashPassword = await bcrypt.hash(password, 12);
     try {
       const existingUser = await this.UserRepository.findByEmail(email);
@@ -26,6 +26,7 @@ export default class userController {
         name,
         email,
         password: hashPassword,
+        role,
       };
 
       const user = await this.UserRepository.signUp(newUser);
@@ -182,4 +183,29 @@ export default class userController {
       );
     }
   };
+
+getUserDetails = async (req, res, next) => {
+    const userID = req.userID;
+  try {
+    const userDetails = await this.UserRepository.findUserRepo({
+      _id: userID,
+    });
+    res.status(200).json({ success: true, userDetails });
+  } catch (error) {
+    throw new ApplicationError(
+      "Something went wrong while getUserDetails",
+      500
+    );
+  }
+};
+
+getAllUsers = async (req, res, next) => {
+  try {
+    const allUsers = await this.UserRepository.getAllUsersRepo();
+    res.status(200).json({ success: true, allUsers });
+  } catch (error) {
+    console.log(error);
+    throw new ApplicationError("Something went wrong while getAllUsers", 500);
+  }
+};
 }

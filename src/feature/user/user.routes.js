@@ -5,6 +5,7 @@ import express from "express";
 
 import userController from "./user.controller.js";
 import jwtAuth from "../../conflig/jwtmiddleware.js";
+import { authByUserRole } from "../../conflig/auth.js";
 
 // 2. Initialize Express router.
 const userRouter = express.Router();
@@ -37,5 +38,20 @@ userRouter.get("/logout", jwtAuth, (req, res) => {
 userRouter.put("/profile/update", jwtAuth, (req, res) => {
   UserController.updateUserProfile(req, res);
 });
+
+userRouter.get("/details", jwtAuth, (req, res) => {
+  UserController.getUserDetails(req, res);
+});
+
+//Only Admin
+userRouter.get(
+  "/admin/allusers",
+  jwtAuth,
+  authByUserRole,
+  (req, res) => {
+    UserController.getAllUsers(req, res);
+  }
+);
+
 
 export default userRouter;

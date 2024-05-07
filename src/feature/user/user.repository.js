@@ -37,4 +37,12 @@ export default class userRepository {
       useFindAndModify: false,
     });
   }
+
+  async findUserRepo(factor) {
+    return await userModel.findOne(factor);
+  }
+
+  async getAllUsersRepo() {
+    return userModel.find({});
+  }
 }
