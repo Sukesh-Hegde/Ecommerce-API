@@ -11,7 +11,10 @@ export default class ProductRepository {
       return await productModel.findById(id);
     } catch (err) {
       console.log(err);
-      throw new ApplicationError("Something went wrong while getting product", 500);
+      throw new ApplicationError(
+        "Something went wrong while getting product",
+        500
+      );
     }
   }
 
