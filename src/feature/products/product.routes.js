@@ -8,7 +8,9 @@ const productRouter = express.Router();
 
 const productController = new ProductController();
 
-// POST Routes
+// POST Routes(ADMINS ONLY)
+
+
 productRouter.post("/add",jwtAuth, authByUserRole, (req, res, next) => {
   productController.addNewProduct(req, res, next);
 });
@@ -17,20 +19,23 @@ productRouter.put("/update/:id", jwtAuth, authByUserRole, (req, res, next) => {
   productController.updateProduct(req, res, next);
 });
 
-
-// // GET Routes
-
-
-// productRouter.delete("/:id", (req, res) => {
-//   productController.deleteProduct(req, res);
-// });
+productRouter.delete("/:id", jwtAuth, authByUserRole, (req, res) => {
+  productController.deleteProduct(req, res);
+});
 
 
+//get
+productRouter.get("/",jwtAuth,(req, res) => {
+  productController.getAllProducts(req, res);
+});
 
+productRouter.get("/details/:id", jwtAuth, (req, res) => {
+  productController.getProductDetails(req, res);
+});
 
-// productRouter.get("/", (req, res) => {
-//   productController.getAllProducts(req, res);
-// });
+productRouter.post("/addReview/:id", jwtAuth, (req, res) => {
+  productController.addReview(req, res);
+});
 
 
 export default productRouter;

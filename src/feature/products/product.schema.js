@@ -71,7 +71,7 @@ export const productSchema = new mongoose.Schema({
     {
       user: {
         type: mongoose.Schema.ObjectId,
-        type: String,
+        ref: "User",
         required: true,
       },
       name: {

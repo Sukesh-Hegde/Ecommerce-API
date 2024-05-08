@@ -51,36 +51,43 @@ export default class userRepository {
     return await userModel.findByIdAndDelete(_id);
   }
 
-async updateUserRoleAndProfileRepo  (_id, data) {
-  try {
-    // Ensure that the provided _id is a valid ObjectId
-    if (!mongoose.Types.ObjectId.isValid(_id)) {
-      return res
-        .status(400)
-        .send("id is not valid");
-    }
+  async updateUserRoleAndProfileRepo(_id, data) {
+    try {
+      // Ensure that the provided _id is a valid ObjectId
+      if (!mongoose.Types.ObjectId.isValid(_id)) {
+        return res.status(400).send("id is not valid");
+      }
 
-    // Find the user by _id and update the role and profile
-    const updatedUser = await userModel.findByIdAndUpdate(
-      _id,
-      { $set: data },
-      { new: true, runValidators: true, useFindAndModify: false }
-    );
+      // Find the user by _id and update the role and profile
+      const updatedUser = await userModel.findByIdAndUpdate(
+        _id,
+        { $set: data },
+        { new: true, runValidators: true, useFindAndModify: false }
+      );
 
-    if (!updatedUser) {
+      if (!updatedUser) {
+        throw new ApplicationError(
+          "Something went wrong while updateUserRoleAndProfileRepo",
+          500
+        );
+      }
+
+      return updatedUser;
+    } catch (error) {
+      console.log(error);
       throw new ApplicationError(
         "Something went wrong while updateUserRoleAndProfileRepo",
         500
       );
     }
-
-    return updatedUser;
-  } catch (error) {
-    console.log(error);
-    throw new ApplicationError(
-      "Something went wrong while updateUserRoleAndProfileRepo",
-      500
-    );
   }
-};
+
+  async findUser(id) {
+    try {
+      return await userModel.findById( id );
+    } catch (err) {
+      console.log(err);
+      throw new ApplicationError("Something went wrong with findUser", 500);
+    }
+  }
 }

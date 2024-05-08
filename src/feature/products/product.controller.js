@@ -1,9 +1,11 @@
 import ProductRepository from "./product.repository.js";
 import { ApplicationError } from "../../error-handler/applicationError.js";
+import userRepository from "../user/user.repository.js";
 
 export default class ProductController {
   constructor() {
     this.productRepository = new ProductRepository();
+    this.UserRepository = new userRepository();
   }
 
   async addNewProduct(req, res, next) {
@@ -28,20 +30,15 @@ export default class ProductController {
 
   async updateProduct(req, res) {
     const id = req.params.id;
-    const userID = req.userID; //requesting directly from token
     try {
       const product = await this.productRepository.get(id);
-      if (product.createdBy == userID) {
-        await product.updateOne({ $set: req.body });
-        const updatedProduct = await this.productRepository.get(id);
-        res.send({ data: updatedProduct, message: "updated successfully" });
-        // res.status(200).json("product Updated");
-      } else {
-        res.status(403).json("Action forbidden");
-      }
+      await product.updateOne({ $set: req.body });
+      const updatedProduct = await this.productRepository.get(id);
+      res.send({ data: updatedProduct, message: "updated successfully" });
+      // res.status(200).json("product Updated");
     } catch (err) {
       console.log(err);
-      return res.status(200).send("Something went wrong while deleting post");
+      return res.status(500).send("Something went wrong while deleting post");
     }
   }
 
@@ -51,24 +48,86 @@ export default class ProductController {
       res.status(200).send(products);
     } catch (err) {
       console.log(err);
-      return res.status(200).send("Something went wrong");
+      return res.status(500).send("Something went wrong");
     }
   }
 
   async deleteProduct(req, res) {
     const id = req.params.id;
-    const userID = req.userID; //requesting directly from token
     try {
       const product = await this.productRepository.get(id);
-      if (product.addedBy == userID) {
-        await this.productRepository.delete(product);
-        res.status(200).json("Product deleted ");
-      } else {
-        res.status(403).json("Action forbidden");
-      }
+      await this.productRepository.delete(product);
+      res.status(200).json("Product deleted ");
     } catch (err) {
       console.log(err);
-      return res.status(200).send("Something went wrong while deleting post");
+      return res.status(500).send("Something went wrong while deleting post");
     }
   }
+
+  async addReview(req, res) {
+    const productId = req.params.id;
+    try {
+      const { rating, comment } = req.body;
+      const user_id = req.userID;
+      const user = await this.UserRepository.findUser(user_id);
+      
+      const name = user.name;
+      const review = {
+        user,
+        name,
+        rating: Number(rating),
+        comment,
+      };
+      if (!rating) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Rating can't be empty" });
+      }
+      const product = await this.productRepository.get(productId);
+      
+      if (!product) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Product not found" });
+      }
+      const findRevieweIndex = product.reviews.findIndex((rev) => {
+        return rev.user.toString() === user_id.toString(); //checks user alrady revieved, if true return index, if false then return -1
+      });
+      console.log(findRevieweIndex);
+      if (findRevieweIndex >= 0) {
+        product.reviews.splice(findRevieweIndex, 1, review);
+      } else {
+        product.reviews.push(review);
+        
+      }
+      await product.save();
+      res
+        .status(201)
+        .json({ success: true, msg: "thx for rating the product", product });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send("Something went wrong while adding review");
+    }
+  }
+
+  async getProductDetails (req, res, next){
+  try {
+    const productDetails = await this.productRepository.get(
+      req.params.id
+    );
+    if (productDetails) {
+      res.status(200).json({ success: true, productDetails });
+    } else {
+      return res
+        .status(404)
+        .json({ success: true, msg: "cannot find the product" });
+    }
+  } catch (error) {
+    console.log(error);
+     throw new ApplicationError(
+      "Something went wrong while adding newproduct",
+      500
+    );
+  }
+};
 }
