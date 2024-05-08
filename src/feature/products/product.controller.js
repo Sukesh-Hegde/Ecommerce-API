@@ -130,4 +130,44 @@ export default class ProductController {
     );
   }
 };
+
+async deleteReview (req, res, next)  {
+  try {
+    const { productId, reviewId } = req.query;
+    if (!productId || !reviewId) {
+      return res
+          .status(404)
+          .json({ success: false, message: "productId and reviewId can't be empty" });
+    }
+    const product = await this.productRepository.get(productId);
+    if (!product) {
+      return res
+          .status(404)
+          .json({ success: false, message: "product not found" });
+    }
+    const reviews = product.reviews;
+
+    const isReviewExistIndex = reviews.findIndex((rev) => {
+      return rev._id.toString() === reviewId.toString();
+    });
+    if (isReviewExistIndex < 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "review doesn't exist" });
+    }
+
+    const reviewToBeDeleted = reviews[isReviewExistIndex];
+    reviews.splice(isReviewExistIndex, 1);
+
+    await product.save();
+    res.status(200).json({
+      success: true,
+      msg: "review deleted successfully",
+      deletedReview: reviewToBeDeleted,
+      product,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(500, error));
+  }
+}
 }

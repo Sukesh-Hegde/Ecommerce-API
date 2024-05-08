@@ -37,5 +37,11 @@ productRouter.post("/addReview/:id", jwtAuth, (req, res) => {
   productController.addReview(req, res);
 });
 
+productRouter.delete("/review/delete", jwtAuth, (req, res) => {
+  productController.deleteReview(req, res);
+});
+
+
+
 
 export default productRouter;
