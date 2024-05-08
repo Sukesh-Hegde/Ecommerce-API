@@ -41,6 +41,10 @@ productRouter.delete("/review/delete", jwtAuth, (req, res) => {
   productController.deleteReview(req, res);
 });
 
+productRouter.get("/reviews/:id", jwtAuth, (req, res) => {
+  productController.getAllReviewsOfAProduct(req, res);
+});
+
 
 
 

@@ -170,4 +170,16 @@ async deleteReview (req, res, next)  {
     return next(new ErrorHandler(500, error));
   }
 }
+
+ async getAllReviewsOfAProduct  (req, res, next) {
+  try {
+    const product = await this.productRepository.get(req.params.id);
+    if (!product) {
+      return next(new ErrorHandler(400, "Product not found!"));
+    }
+    res.status(200).json({ success: true, reviews: product.reviews });
+  } catch (error) {
+    return next(new ErrorHandler(400, error));
+  }
+};
 }
