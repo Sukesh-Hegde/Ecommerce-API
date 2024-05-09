@@ -2,7 +2,7 @@
 
 An API for an ecommerce platform where an customer can login and view, get ,rate,and update the products
 
-## Teck used
+## Tech used
 
 Tech Stack: Node.js & Mongo DB
 
