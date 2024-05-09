@@ -40,17 +40,14 @@ export default class userController {
 
   async signIn(req, res, next) {
     try {
-      //1.find user by email
-      //check user is there by checking the email
+
       const user = await this.UserRepository.findByEmail(req.body.email);
       if (!user) {
         return res.status(400).send("Incorrect email");
       } else {
-        //2.compare password with hashed password
         const result = await bcrypt.compare(req.body.password, user.password);
 
         if (result) {
-          // 3. Create token.
           const token = jwt.sign(
             {
               userID: user._id,
@@ -72,7 +69,6 @@ export default class userController {
             .cookie("token", token, cookieOptions)
             .json({ success: true, msg: "user login successful", token });
 
-          // 4. Send token.
         } else {
           return res.status(400).send("Incorrect password ");
         }

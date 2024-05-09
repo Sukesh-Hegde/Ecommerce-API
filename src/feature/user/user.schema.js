@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import crypto from "crypto";
-import validator from "validator";
 
 export const userSchema = new mongoose.Schema({
   name: {
